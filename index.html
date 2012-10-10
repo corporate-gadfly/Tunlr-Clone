@@ -259,7 +259,7 @@ coredump_dir /var/spool/squid3
 <pre><code>-A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
 </code></pre>
 
-<p>For the <code>nat</code> side, you need:</p>
+<p>For the <code>nat</code> side, you need (remember to add `-t nat` to the iptables command):</p>
 
 <pre><code>-A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
 </code></pre>
