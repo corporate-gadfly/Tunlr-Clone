@@ -206,10 +206,10 @@ When you discover a new domain that you want to "master", simply add it to the `
     coredump_dir /var/spool/squid3
 
 ##Iptables##
-On the iptables side, for `filter` you need (where 172.x.x.x is the venet0:1 internal IP address):
+On the iptables side, for `filter` table (which is the default and need not be specified in an `iptables` command), you need (where 172.x.x.x is the venet0:1 internal IP address):
 
     -A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
 
-For the `nat` side, you need (remember to add `-t nat` to the iptables command):
+For the `nat` table, you need (remember to add `-t nat` to the iptables command):
 
     -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
