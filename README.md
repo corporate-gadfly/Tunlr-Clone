@@ -43,11 +43,11 @@ Following is my `dnsmasq` configuration on my Tomato-based router (running a Toa
     # OpenDNS
     #server=208.67.222.222
     #server=208.67.220.220
-In essence, I am forwarding DNS queries to my VPS only for the specified domans. Everything else goes to Google DNS
+In essence, I am forwarding DNS queries to my VPS only for the specified domains. Everything else goes to Google DNS
 (or can easily go to your ISP DNS).
 
 ##Your own DNS Server##
-I am running bind9 on my VPS to override the DNS resolution for the entire domans mentioned above.
+I am running bind9 on my VPS to override the DNS resolution for the entire domains mentioned in the Tomato-based router configuration above.
 The plan is to send the external IP address of my VPS as the resolved IP address for any of those domains.
 
 Once the web traffic hits my VPS, I use iptables to redirect port 80 traffic to squid running on port 8xxx.
