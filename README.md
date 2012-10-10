@@ -209,6 +209,16 @@ When you discover a new domain that you want to "master", simply add it to the `
     hierarchy_stoplist cgi-bin ?
     debug_options ALL,3
     coredump_dir /var/spool/squid3
+    cache deny all
+    refresh_pattern ^ftp:    	1440	20%	10080
+    refresh_pattern ^gopher:	1440	0%	1440
+    refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
+    refresh_pattern .		0	20%	4320
+    request_header_access Proxy-Connection deny all
+    request_header_access X-Forwarded-For deny all
+    request_header_access Connection deny all
+    request_header_access Via deny all
+    forwarded_for off
 
 ##Iptables##
 On the iptables side, for `filter` table (which is the default and need not be specified in an `iptables` command), you need (where 172.x.x.x is the venet0:1 internal IP address):
