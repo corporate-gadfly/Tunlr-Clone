@@ -59,6 +59,7 @@ Here is the bind9 config:
     options {
       directory "/var/cache/bind";
     	forwarders {
+            # these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)
     		199.195.255.68;
     		199.195.255.69;
     	};
