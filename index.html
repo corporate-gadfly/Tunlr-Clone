@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -36,6 +43,15 @@
 
 <p>To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based services), you need to invest in a VPS.
 For the purposes of this discussion, I am assuming that you will be using this for watching US geo-locked content.</p>
+
+<h2>VPS Provider Specific Terminology</h2>
+
+<p>My VPS provider is <a href="http://buyvm.net/">buyvm</a>. I have an OpenVZ 128m plan with them hosted in New York. So, the venet0 references that
+you will see pertain to that VPS provider.</p>
+
+<h2>Disclaimer</h2>
+
+<p>This information is provided as is without warranty of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. In no event shall the author be liable for any damages whatsoever including direct, indirect, incidental consequential, loss of business profits, or special damages.</p>
 
 <h2>US IP Address</h2>
 
@@ -250,6 +266,16 @@ http_port 0.0.0.0:8128 transparent
 hierarchy_stoplist cgi-bin ?
 debug_options ALL,3
 coredump_dir /var/spool/squid3
+cache deny all
+refresh_pattern ^ftp:       1440    20% 10080
+refresh_pattern ^gopher:    1440    0%  1440
+refresh_pattern -i (/cgi-bin/|\?) 0 0%  0
+refresh_pattern .       0   20% 4320
+request_header_access Proxy-Connection deny all
+request_header_access X-Forwarded-For deny all
+request_header_access Connection deny all
+request_header_access Via deny all
+forwarded_for off
 </code></pre>
 
 <h2>Iptables</h2>
