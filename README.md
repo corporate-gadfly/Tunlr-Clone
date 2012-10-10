@@ -1,6 +1,6 @@
 Tunlr-Clone
 ===========
-To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based services), you need to invest in a VPS.
+To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based services) clone on the cheap, you need to invest in a VPS.
 For the purposes of this discussion, I am assuming that you will be using this for watching US geo-locked content.
 ##VPS Provider Specific Terminology##
 My VPS provider is [buyvm](http://buyvm.net/). I have an OpenVZ 128m plan with them hosted in New York. So, the venet0 references that
