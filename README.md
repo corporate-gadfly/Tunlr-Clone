@@ -11,7 +11,7 @@ This information is provided as is without warranty of any kind, either express 
 Basically we are interested in proxying content for certain domains. The actual streaming media sits on CDN
 networks and is usually not geo-locked. The amount of proxying we'll end up doing will be relatively
 insignificant compared to a VPN-based setup.
-![How Tunlr Cloning works](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)
+[![How Tunlr Cloning works](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)
 ##US IP Address##
 Your VPS provider must provide you with a US IP address
 ##Tomato based router##
