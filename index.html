@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -67,39 +74,39 @@ therefore having a Tomato capable router is preferable.</p>
 <p>Following is my <code>dnsmasq</code> configuration on my Tomato-based router (running a Toastman build):
 <code>Advanced -&gt; DHCP/DNS -&gt; Dnsmasq Custom configuration</code></p>
 
-<pre><code># Never forward plain names (without a dot or domain part)
+<div class="highlight"><pre><span class="c"># Never forward plain names (without a dot or domain part)</span>
 domain-needed
-# Never forward addresses in the non-routed address spaces.
+<span class="c"># Never forward addresses in the non-routed address spaces.</span>
 bogus-priv
 
-# If you don't want dnsmasq to read /etc/resolv.conf or any other
-# file, getting its servers from this file instead (see below), then
-# uncomment this.
+<span class="c"># If you don't want dnsmasq to read /etc/resolv.conf or any other</span>
+<span class="c"># file, getting its servers from this file instead (see below), then</span>
+<span class="c"># uncomment this.</span>
 no-resolv
 
-# If you don't want dnsmasq to poll /etc/resolv.conf or other resolv
-# files for changes and re-read them then uncomment this.
+<span class="c"># If you don't want dnsmasq to poll /etc/resolv.conf or other resolv</span>
+<span class="c"># files for changes and re-read them then uncomment this.</span>
 no-poll
 
-# tunlr for hulu
-server=/hulu.com/199.x.x.x
-server=/huluim.com/199.x.x.x
-# tunlr for US networks
-# cbs works with link.theplatform.com
-server=/abc.com/abc.go.com/199.x.x.x
-server=/fox.com/link.theplatform.com/199.x.x.x
-server=/nbc.com/nbcuni.com/199.x.x.x
-server=/ip2location.com/199.x.x.x
-# espn3 
-server=/broadband.espn.go.com/199.x.x.x
+<span class="c"># tunlr for hulu</span>
+<span class="nv">server</span><span class="o">=</span>/hulu.com/199.x.x.x
+<span class="nv">server</span><span class="o">=</span>/huluim.com/199.x.x.x
+<span class="c"># tunlr for US networks</span>
+<span class="c"># cbs works with link.theplatform.com</span>
+<span class="nv">server</span><span class="o">=</span>/abc.com/abc.go.com/199.x.x.x
+<span class="nv">server</span><span class="o">=</span>/fox.com/link.theplatform.com/199.x.x.x
+<span class="nv">server</span><span class="o">=</span>/nbc.com/nbcuni.com/199.x.x.x
+<span class="nv">server</span><span class="o">=</span>/ip2location.com/199.x.x.x
+<span class="c"># espn3 </span>
+<span class="nv">server</span><span class="o">=</span>/broadband.espn.go.com/199.x.x.x
 
-# Google
-server=8.8.8.8
-server=8.8.4.4
-# OpenDNS
-#server=208.67.222.222
-#server=208.67.220.220
-</code></pre>
+<span class="c"># Google</span>
+<span class="nv">server</span><span class="o">=</span>8.8.8.8
+<span class="nv">server</span><span class="o">=</span>8.8.4.4
+<span class="c"># OpenDNS</span>
+<span class="c">#server=208.67.222.222</span>
+<span class="c">#server=208.67.220.220</span>
+</pre></div>
 
 <p>In essence, I am forwarding DNS queries to my VPS only for the specified domains. Everything else goes to Google DNS
 (or can easily go to your ISP DNS).</p>
@@ -116,7 +123,7 @@ The plan is to send the external IP address of my VPS as the resolved IP address
 <p><code>/etc/bind/named.conf.options</code></p>
 
 <pre><code>options {
-  directory "/var/cache/bind";
+    directory "/var/cache/bind";
     forwarders {
         # these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)
         199.195.255.68;
@@ -240,57 +247,57 @@ ns1 IN  A   199.y.y.y                ; external IP from venet0:0
 
 <p><code>/etc/squid3/squid.conf</code></p>
 
-<pre><code># grep '^[^#]' /etc/squid3/squid.conf
-acl manager proto cache_object
-acl localhost src 127.0.0.1/32 ::1
-acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1
-acl trusted src 172.x.x.x 173.y.y.y        # internal IP from venet0:1 and ISP IP (Cable/DSL)
-acl SSL_ports port 443
-acl Safe_ports port 80      # http
-acl Safe_ports port 21      # ftp
-acl Safe_ports port 443     # https
-acl Safe_ports port 70      # gopher
-acl Safe_ports port 210     # wais
-acl Safe_ports port 1025-65535  # unregistered ports
-acl Safe_ports port 280     # http-mgmt
-acl Safe_ports port 488     # gss-http
-acl Safe_ports port 591     # filemaker
-acl Safe_ports port 777     # multiling http
-acl CONNECT method CONNECT
-http_access allow manager localhost
-http_access deny manager
-http_access deny !Safe_ports
-http_access deny CONNECT !SSL_ports
-http_access allow trusted
-http_access allow localhost
-http_access deny all
-http_port 0.0.0.0:8128 transparent
-hierarchy_stoplist cgi-bin ?
-debug_options ALL,3
-coredump_dir /var/spool/squid3
-cache deny all
-refresh_pattern ^ftp:       1440    20% 10080
-refresh_pattern ^gopher:    1440    0%  1440
-refresh_pattern -i (/cgi-bin/|\?) 0 0%  0
-refresh_pattern .       0   20% 4320
-request_header_access Proxy-Connection deny all
-request_header_access X-Forwarded-For deny all
-request_header_access Connection deny all
-request_header_access Via deny all
-forwarded_for off
-</code></pre>
+<div class="highlight"><pre><span class="c"># grep '^[^#]' /etc/squid3/squid.conf</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>manager<span class="w"> </span><span class="k">proto</span><span class="w"> </span>cache_object<span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>localhost<span class="w"> </span><span class="k">src</span><span class="w"> </span><span class="mf">127.0.0.1/32</span><span class="w"> </span><span class="mf">::1</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>to_localhost<span class="w"> </span><span class="k">dst</span><span class="w"> </span><span class="mf">127.0.0.0/8</span><span class="w"> </span><span class="mf">0.0.0.0/32</span><span class="w"> </span><span class="mf">::1</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>trusted<span class="w"> </span><span class="k">src</span><span class="w"> </span><span class="m">172</span>.x.x.x<span class="w"> </span><span class="m">173</span>.y.y.y<span class="w">        </span><span class="c"># internal IP from venet0:1 and ISP IP (Cable/DSL)</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>SSL_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">443</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">80</span><span class="w">      </span><span class="c"># http</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">21</span><span class="w">      </span><span class="c"># ftp</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">443</span><span class="w">     </span><span class="c"># https</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">70</span><span class="w">      </span><span class="c"># gopher</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">210</span><span class="w">     </span><span class="c"># wais</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">1025-65535</span><span class="w">  </span><span class="c"># unregistered ports</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">280</span><span class="w">     </span><span class="c"># http-mgmt</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">488</span><span class="w">     </span><span class="c"># gss-http</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">591</span><span class="w">     </span><span class="c"># filemaker</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">777</span><span class="w">     </span><span class="c"># multiling http</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>CONNECT<span class="w"> </span><span class="k">method</span><span class="w"> </span>CONNECT<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">allow</span><span class="w"> </span>manager<span class="w"> </span>localhost<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">deny</span><span class="w"> </span>manager<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">deny</span><span class="w"> </span>!Safe_ports<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">deny</span><span class="w"> </span>CONNECT<span class="w"> </span>!SSL_ports<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">allow</span><span class="w"> </span>trusted<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">allow</span><span class="w"> </span>localhost<span class="w"></span>
+<span class="k">http_access</span><span class="w"> </span><span class="no">deny</span><span class="w"> </span><span class="no">all</span><span class="w"></span>
+<span class="k">http_port</span><span class="w"> </span><span class="mf">0.0.0.0</span>:8128<span class="w"> </span>transparent<span class="w"></span>
+<span class="k">hierarchy_stoplist</span><span class="w"> </span>cgi-bin<span class="w"> </span>?<span class="w"></span>
+<span class="k">debug_options</span><span class="w"> </span><span class="no">ALL</span>,3<span class="w"></span>
+<span class="k">coredump_dir</span><span class="w"> </span>/var/spool/squid3<span class="w"></span>
+cache<span class="w"> </span><span class="no">deny</span><span class="w"> </span><span class="no">all</span><span class="w"></span>
+<span class="k">refresh_pattern</span><span class="w"> </span>^ftp:<span class="w">       </span><span class="m">1440</span><span class="w">    </span><span class="m">20%</span><span class="w"> </span><span class="m">10080</span><span class="w"></span>
+<span class="k">refresh_pattern</span><span class="w"> </span>^gopher:<span class="w">    </span><span class="m">1440</span><span class="w">    </span><span class="m">0%</span><span class="w">  </span><span class="m">1440</span><span class="w"></span>
+<span class="k">refresh_pattern</span><span class="w"> </span>-i<span class="w"> </span>(/cgi-bin/|\?)<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0%</span><span class="w">  </span><span class="m">0</span><span class="w"></span>
+<span class="k">refresh_pattern</span><span class="w"> </span>.<span class="w">       </span><span class="m">0</span><span class="w">   </span><span class="m">20%</span><span class="w"> </span><span class="m">4320</span><span class="w"></span>
+request_header_access<span class="w"> </span>Proxy-Connection<span class="w"> </span><span class="no">deny</span><span class="w"> </span><span class="no">all</span><span class="w"></span>
+request_header_access<span class="w"> </span>X-Forwarded-For<span class="w"> </span><span class="no">deny</span><span class="w"> </span><span class="no">all</span><span class="w"></span>
+request_header_access<span class="w"> </span>Connection<span class="w"> </span><span class="no">deny</span><span class="w"> </span><span class="no">all</span><span class="w"></span>
+request_header_access<span class="w"> </span><span class="no">Via</span><span class="w"> </span><span class="no">deny</span><span class="w"> </span><span class="no">all</span><span class="w"></span>
+<span class="k">forwarded_for</span><span class="w"> </span><span class="no">off</span><span class="w"></span>
+</pre></div>
 
 <h2>Iptables</h2>
 
 <p>On the iptables side, for <code>filter</code> table (which is the default and need not be specified in an <code>iptables</code> command), you need (where 172.x.x.x is the venet0:1 internal IP address):</p>
 
-<pre><code>-A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
-</code></pre>
+<div class="highlight"><pre>-A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
+</pre></div>
 
 <p>For the <code>nat</code> table, you need (remember to add <code>-t nat</code> to the iptables command):</p>
 
-<pre><code>-A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
-</code></pre>
+<div class="highlight"><pre>-A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
+</pre></div>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
