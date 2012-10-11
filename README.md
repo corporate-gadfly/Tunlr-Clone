@@ -46,6 +46,7 @@ server=/huluim.com/199.x.x.x
 server=/abc.com/abc.go.com/199.x.x.x
 server=/fox.com/link.theplatform.com/199.x.x.x
 server=/nbc.com/nbcuni.com/199.x.x.x
+server=/pandora.com/199.x.x.x
 server=/ip2location.com/199.x.x.x
 # espn3 
 server=/broadband.espn.go.com/199.x.x.x
@@ -150,6 +151,10 @@ zone "nbc.com." {
     file "/etc/bind/db.override";
 };
 zone "nbcuni.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "pandora.com." {
     type master;
     file "/etc/bind/db.override";
 };
