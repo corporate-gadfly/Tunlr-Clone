@@ -22,39 +22,40 @@ therefore having a Tomato capable router is preferable.
 
 Following is my `dnsmasq` configuration on my Tomato-based router (running a Toastman build):
 `Advanced -> DHCP/DNS -> Dnsmasq Custom configuration`
+```bash
+# Never forward plain names (without a dot or domain part)
+domain-needed
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
 
-    # Never forward plain names (without a dot or domain part)
-    domain-needed
-    # Never forward addresses in the non-routed address spaces.
-    bogus-priv
-    
-    # If you don't want dnsmasq to read /etc/resolv.conf or any other
-    # file, getting its servers from this file instead (see below), then
-    # uncomment this.
-    no-resolv
-    
-    # If you don't want dnsmasq to poll /etc/resolv.conf or other resolv
-    # files for changes and re-read them then uncomment this.
-    no-poll
-    
-    # tunlr for hulu
-    server=/hulu.com/199.x.x.x
-    server=/huluim.com/199.x.x.x
-    # tunlr for US networks
-    # cbs works with link.theplatform.com
-    server=/abc.com/abc.go.com/199.x.x.x
-    server=/fox.com/link.theplatform.com/199.x.x.x
-    server=/nbc.com/nbcuni.com/199.x.x.x
-    server=/ip2location.com/199.x.x.x
-    # espn3 
-    server=/broadband.espn.go.com/199.x.x.x
-    
-    # Google
-    server=8.8.8.8
-    server=8.8.4.4
-    # OpenDNS
-    #server=208.67.222.222
-    #server=208.67.220.220
+# If you don't want dnsmasq to read /etc/resolv.conf or any other
+# file, getting its servers from this file instead (see below), then
+# uncomment this.
+no-resolv
+
+# If you don't want dnsmasq to poll /etc/resolv.conf or other resolv
+# files for changes and re-read them then uncomment this.
+no-poll
+
+# tunlr for hulu
+server=/hulu.com/199.x.x.x
+server=/huluim.com/199.x.x.x
+# tunlr for US networks
+# cbs works with link.theplatform.com
+server=/abc.com/abc.go.com/199.x.x.x
+server=/fox.com/link.theplatform.com/199.x.x.x
+server=/nbc.com/nbcuni.com/199.x.x.x
+server=/ip2location.com/199.x.x.x
+# espn3 
+server=/broadband.espn.go.com/199.x.x.x
+
+# Google
+server=8.8.8.8
+server=8.8.4.4
+# OpenDNS
+#server=208.67.222.222
+#server=208.67.220.220
+```
 In essence, I am forwarding DNS queries to my VPS only for the specified domains. Everything else goes to Google DNS
 (or can easily go to your ISP DNS).
 
@@ -67,122 +68,122 @@ Once the web traffic hits my VPS, I use iptables to redirect port 80 traffic to 
 Here is the bind9 config:
 
 `/etc/bind/named.conf.options`
+```
+options {
+    directory "/var/cache/bind";
+	forwarders {
+        # these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)
+		199.195.255.68;
+		199.195.255.69;
+	};
 
-    options {
-      directory "/var/cache/bind";
-    	forwarders {
-            # these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)
-    		199.195.255.68;
-    		199.195.255.69;
-    	};
-    
-    	auth-nxdomain no;    # conform to RFC1035
-    	listen-on-v6 { any; };
-    	allow-query { trusted; };
-    	allow-recursion { trusted; };
-    	recursion yes;
-    	dnssec-enable no;
-    	dnssec-validation no;
-    };
-
+	auth-nxdomain no;    # conform to RFC1035
+	listen-on-v6 { any; };
+	allow-query { trusted; };
+	allow-recursion { trusted; };
+	recursion yes;
+	dnssec-enable no;
+	dnssec-validation no;
+};
+```
 `/etc/bind/named.conf.local`
+```
+//
+// Do any local configuration here
+//
 
-    //
-    // Do any local configuration here
-    //
-    
-    // Consider adding the 1918 zones here, if they are not used in your
-    // organization
-    //include "/etc/bind/zones.rfc1918";
-    
-    include "/etc/bind/rndc.key";
-    
-    acl "trusted" {
-        172.x.x.x;        // local venet0:1 internal IP here
-        127.0.0.1;
-        173.x.x.x;        // Your ISP IP here (cable/DSL)
-    };
-    
-    include "/etc/bind/zones.override";
-    
-    logging {
-        channel bind_log {
-            file "/var/log/named/named.log" versions 5 size 30m;
-            severity info;
-            print-time yes;
-            print-severity yes;
-            print-category yes;
-        };
-        category default { bind_log; };
-        category queries { bind_log; };
-    };
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
 
+include "/etc/bind/rndc.key";
+
+acl "trusted" {
+    172.x.x.x;        // local venet0:1 internal IP here
+    127.0.0.1;
+    173.x.x.x;        // Your ISP IP here (cable/DSL)
+};
+
+include "/etc/bind/zones.override";
+
+logging {
+    channel bind_log {
+        file "/var/log/named/named.log" versions 5 size 30m;
+        severity info;
+        print-time yes;
+        print-severity yes;
+        print-category yes;
+    };
+    category default { bind_log; };
+    category queries { bind_log; };
+};
+```
 `/etc/bind/zones.override`
-
-    zone "hulu.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "huluim.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "abc.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "abc.go.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "fox.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "link.theplatform.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "nbc.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "nbcuni.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "broadband.espn.go.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-    zone "ip2location.com." {
-        type master;
-        file "/etc/bind/db.override";
-    };
-
+```
+zone "hulu.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "huluim.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "abc.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "abc.go.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "fox.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "link.theplatform.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "nbc.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "nbcuni.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "broadband.espn.go.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "ip2location.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+```
 `/etc/bind/db.override`
+```
+;
+; BIND data file for overridden IPs
+;
+$TTL  86400
+@   IN  SOA ns1 root (
+            2012100401  ; serial
+            604800      ; refresh 1w
+            86400       ; retry 1d
+            2419200     ; expiry 4w
+            86400       ; minimum TTL 1d
+            )
 
-    ;
-    ; BIND data file for overridden IPs
-    ;
-    $TTL  86400
-    @   IN  SOA ns1 root (
-                2012100401  ; serial
-                604800      ; refresh 1w
-                86400       ; retry 1d
-                2419200     ; expiry 4w
-                86400       ; minimum TTL 1d
-                )
-    
-    ; need atleast a nameserver
-        IN  NS  ns1
-    ; specify nameserver IP address
-    ns1 IN  A   199.y.y.y                ; external IP from venet0:0
-    ; provide IP address for domain itself
-    @   IN  A   199.y.y.y                ; external IP from venet0:0
-    ; resolve everything with the same IP address as ns1
-    *   IN  A   199.y.y.y                 ; external IP from venet0:0
-
+; need atleast a nameserver
+    IN  NS  ns1
+; specify nameserver IP address
+ns1 IN  A   199.y.y.y                ; external IP from venet0:0
+; provide IP address for domain itself
+@   IN  A   199.y.y.y                ; external IP from venet0:0
+; resolve everything with the same IP address as ns1
+*   IN  A   199.y.y.y                 ; external IP from venet0:0
+```
 When you discover a new domain that you want to "master", simply add it to the `zones.override` file and restart bind9.
 
 ##Squid##
