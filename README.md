@@ -67,7 +67,7 @@ Once the web traffic hits my VPS, I use iptables to redirect port 80 traffic to 
 Here is the bind9 config:
 
 `/etc/bind/named.conf.options`
-```
+```nginx
 options {
     directory "/var/cache/bind";
 	forwarders {
@@ -86,7 +86,7 @@ options {
 };
 ```
 `/etc/bind/named.conf.local`
-```
+```nginx
 //
 // Do any local configuration here
 //
@@ -118,7 +118,7 @@ logging {
 };
 ```
 `/etc/bind/zones.override`
-```
+```nginx
 zone "hulu.com." {
     type master;
     file "/etc/bind/db.override";
