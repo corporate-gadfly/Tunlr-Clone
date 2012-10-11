@@ -1,37 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Tunlr Clone by corporate-gadfly</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Tunlr Clone : Use a cheap VPS to make a Tunlr Clone" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Tunlr Clone</title>
   </head>
+
   <body>
 
-      <header>
-        <h1>Tunlr Clone</h1>
-        <p>Use a cheap VPS to make a Tunlr Clone</p>
-      </header>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/corporate-gadfly/Tunlr-Clone">View on GitHub</a>
 
-      <div id="banner">
-        <span id="logo"></span>
+          <h1 id="project_title">Tunlr Clone</h1>
+          <h2 id="project_tagline">Use a cheap VPS to make a Tunlr Clone</h2>
 
-        <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
-      </div><!-- end banner -->
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
 
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
-      <section>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h1>Tunlr Clone</h1>
 
 <p>To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based services) clone on the cheap, you need to invest in a VPS.
@@ -91,6 +90,7 @@ no-poll
 <span class="nv">server</span><span class="o">=</span>/abc.com/abc.go.com/199.x.x.x
 <span class="nv">server</span><span class="o">=</span>/fox.com/link.theplatform.com/199.x.x.x
 <span class="nv">server</span><span class="o">=</span>/nbc.com/nbcuni.com/199.x.x.x
+<span class="nv">server</span><span class="o">=</span>/pandora.com/199.x.x.x
 <span class="nv">server</span><span class="o">=</span>/ip2location.com/199.x.x.x
 <span class="c"># espn3 </span>
 <span class="nv">server</span><span class="o">=</span>/broadband.espn.go.com/199.x.x.x
@@ -202,6 +202,10 @@ The plan is to send the external IP address of my VPS as the resolved IP address
     <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
     <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
 <span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"pandora.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
 <span class="k">zone</span> <span class="s">"broadband.espn.go.com."</span> <span class="p">{</span>
     <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
     <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
@@ -296,12 +300,17 @@ request_header_access<span class="w"> </span><span class="no">Via</span><span cl
 <div class="highlight"><pre>iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
 </pre></div>
       </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Tunlr Clone maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
     
+
   </body>
 </html>
