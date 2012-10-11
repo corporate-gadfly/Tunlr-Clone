@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -47,6 +54,8 @@ you will see pertain to that VPS provider.</p>
 <p>This information is provided as is without warranty of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. In no event shall the author be liable for any damages whatsoever including direct, indirect, incidental consequential, loss of business profits, or special damages.</p>
 
 <p>If you leave your DNS server or Squid proxy server wide open to abuse, that's on your own head. Take precautions in this regard. Proceed at your own risk.</p>
+
+<p>Also this is not meant to be a hold-your-hand start from scratch tutorial. Therefore, some level of Linux expertise is necessary.</p>
 
 <h2>Background</h2>
 
@@ -282,14 +291,16 @@ request_header_access<span class="w"> </span><span class="no">Via</span><span cl
 
 <h2>Iptables</h2>
 
-<p>On the iptables side, for <code>filter</code> table (which is the default and need not be specified in an <code>iptables</code> command), you need (where 172.x.x.x is the venet0:1 internal IP address):</p>
+<p><code>172.x.x.x</code> is the venet0:1 internal IP address. </p>
 
-<div class="highlight"><pre>-A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
+<p>For the <code>filter</code> table (which is the default):</p>
+
+<div class="highlight"><pre>iptables -A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
 </pre></div>
 
-<p>For the <code>nat</code> table, you need (remember to add <code>-t nat</code> to the iptables command):</p>
+<p>For the <code>nat</code> table:</p>
 
-<div class="highlight"><pre>-A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
+<div class="highlight"><pre>iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
 </pre></div>
       </section>
       <footer>
