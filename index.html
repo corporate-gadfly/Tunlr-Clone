@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -115,100 +122,100 @@ The plan is to send the external IP address of my VPS as the resolved IP address
 
 <p><code>/etc/bind/named.conf.options</code></p>
 
-<pre><code>options {
-    directory "/var/cache/bind";
-    forwarders {
-        # these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)
-        199.195.255.68;
-        199.195.255.69;
-    };
+<div class="highlight"><pre><span class="k">options</span> <span class="p">{</span>
+    <span class="kn">directory</span> <span class="s">"/var/cache/bind"</span><span class="p">;</span>
+    <span class="kn">forwarders</span> <span class="p">{</span>
+        <span class="c1"># these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)</span>
+        <span class="kn">199.195.255.68</span><span class="p">;</span>
+        <span class="kn">199.195.255.69</span><span class="p">;</span>
+    <span class="p">}</span>;
 
-    auth-nxdomain no;    # conform to RFC1035
-    listen-on-v6 { any; };
-    allow-query { trusted; };
-    allow-recursion { trusted; };
-    recursion yes;
-    dnssec-enable no;
-    dnssec-validation no;
-};
-</code></pre>
+    <span class="kn">auth-nxdomain</span> <span class="s">no</span><span class="p">;</span>    <span class="c1"># conform to RFC1035</span>
+    <span class="kn">listen-on-v6</span> <span class="p">{</span> <span class="kn">any</span><span class="p">;</span> <span class="p">}</span>;
+    <span class="kn">allow-query</span> <span class="p">{</span> <span class="kn">trusted</span><span class="p">;</span> <span class="p">}</span>;
+    <span class="kn">allow-recursion</span> <span class="p">{</span> <span class="kn">trusted</span><span class="p">;</span> <span class="p">}</span>;
+    <span class="kn">recursion</span> <span class="s">yes</span><span class="p">;</span>
+    <span class="kn">dnssec-enable</span> <span class="s">no</span><span class="p">;</span>
+    <span class="kn">dnssec-validation</span> <span class="s">no</span><span class="p">;</span>
+<span class="p">}</span>;
+</pre></div>
 
 <p><code>/etc/bind/named.conf.local</code></p>
 
-<pre><code>//
-// Do any local configuration here
-//
+<div class="highlight"><pre><span class="k">//</span>
+<span class="s">//</span> <span class="s">Do</span> <span class="s">any</span> <span class="s">local</span> <span class="s">configuration</span> <span class="s">here</span>
+<span class="s">//</span>
 
-// Consider adding the 1918 zones here, if they are not used in your
-// organization
-//include "/etc/bind/zones.rfc1918";
+<span class="s">//</span> <span class="s">Consider</span> <span class="s">adding</span> <span class="s">the</span> <span class="mi">1918</span> <span class="s">zones</span> <span class="s">here,</span> <span class="s">if</span> <span class="s">they</span> <span class="s">are</span> <span class="s">not</span> <span class="s">used</span> <span class="s">in</span> <span class="s">your</span>
+<span class="s">//</span> <span class="s">organization</span>
+<span class="s">//include</span> <span class="s">"/etc/bind/zones.rfc1918"</span><span class="p">;</span>
 
-include "/etc/bind/rndc.key";
+<span class="k">include</span> <span class="n">"/etc/bind/rndc.key"</span>;
 
-acl "trusted" {
-    172.x.x.x;        // local venet0:1 internal IP here
-    127.0.0.1;
-    173.x.x.x;        // Your ISP IP here (cable/DSL)
-};
+<span class="k">acl</span> <span class="s">"trusted"</span> <span class="p">{</span>
+    <span class="kn">172.x.x.x</span><span class="p">;</span>        <span class="kn">//</span> <span class="s">local</span> <span class="n">venet0</span><span class="p">:</span><span class="mi">1</span> <span class="s">internal</span> <span class="s">IP</span> <span class="s">here</span>
+    <span class="mi">127</span><span class="s">.0.0.1</span><span class="p">;</span>
+    <span class="kn">173.x.x.x</span><span class="p">;</span>        <span class="kn">//</span> <span class="s">Your</span> <span class="s">ISP</span> <span class="s">IP</span> <span class="s">here</span> <span class="s">(cable/DSL)</span>
+<span class="err">}</span><span class="p">;</span>
 
-include "/etc/bind/zones.override";
+<span class="kn">include</span> <span class="s">"/etc/bind/zones.override"</span><span class="p">;</span>
 
-logging {
-    channel bind_log {
-        file "/var/log/named/named.log" versions 5 size 30m;
-        severity info;
-        print-time yes;
-        print-severity yes;
-        print-category yes;
-    };
-    category default { bind_log; };
-    category queries { bind_log; };
-};
-</code></pre>
+<span class="kn">logging</span> <span class="p">{</span>
+    <span class="kn">channel</span> <span class="s">bind_log</span> <span class="p">{</span>
+        <span class="kn">file</span> <span class="s">"/var/log/named/named.log"</span> <span class="s">versions</span> <span class="mi">5</span> <span class="s">size</span> <span class="mi">30m</span><span class="p">;</span>
+        <span class="kn">severity</span> <span class="s">info</span><span class="p">;</span>
+        <span class="kn">print-time</span> <span class="s">yes</span><span class="p">;</span>
+        <span class="kn">print-severity</span> <span class="s">yes</span><span class="p">;</span>
+        <span class="kn">print-category</span> <span class="s">yes</span><span class="p">;</span>
+    <span class="p">}</span>;
+    <span class="kn">category</span> <span class="s">default</span> <span class="p">{</span> <span class="kn">bind_log</span><span class="p">;</span> <span class="p">}</span>;
+    <span class="kn">category</span> <span class="s">queries</span> <span class="p">{</span> <span class="kn">bind_log</span><span class="p">;</span> <span class="p">}</span>;
+<span class="p">}</span>;
+</pre></div>
 
 <p><code>/etc/bind/zones.override</code></p>
 
-<pre><code>zone "hulu.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "huluim.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "abc.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "abc.go.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "fox.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "link.theplatform.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "nbc.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "nbcuni.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "broadband.espn.go.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-zone "ip2location.com." {
-    type master;
-    file "/etc/bind/db.override";
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">zone</span> <span class="s">"hulu.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"huluim.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"abc.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"abc.go.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"fox.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"link.theplatform.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"nbc.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"nbcuni.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"broadband.espn.go.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+<span class="k">zone</span> <span class="s">"ip2location.com."</span> <span class="p">{</span>
+    <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
+    <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
+<span class="p">}</span>;
+</pre></div>
 
 <p><code>/etc/bind/db.override</code></p>
 
