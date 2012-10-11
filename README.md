@@ -8,6 +8,8 @@ you will see pertain to that VPS provider.
 This information is provided as is without warranty of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. In no event shall the author be liable for any damages whatsoever including direct, indirect, incidental consequential, loss of business profits, or special damages.
 
 If you leave your DNS server or Squid proxy server wide open to abuse, that's on your own head. Take precautions in this regard. Proceed at your own risk.
+
+Also this is not meant to be a hold-your-hand start from scratch tutorial. Therefore, some level of Linux expertise is necessary.
 ##Background##
 Basically we are interested in proxying content only for certain domains. The actual streaming media sits on CDN
 networks and is usually not geo-locked. The amount of proxying we'll end up doing will be relatively
@@ -228,11 +230,13 @@ request_header_access Via deny all
 forwarded_for off
 ```
 ##Iptables##
-On the iptables side, for `filter` table (which is the default and need not be specified in an `iptables` command), you need (where 172.x.x.x is the venet0:1 internal IP address):
+`172.x.x.x` is the venet0:1 internal IP address. 
+
+For the `filter` table (which is the default):
 ```bash
--A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
+iptables -A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
 ```
-For the `nat` table, you need (remember to add `-t nat` to the iptables command):
+For the `nat` table:
 ```bash
--A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
 ```
