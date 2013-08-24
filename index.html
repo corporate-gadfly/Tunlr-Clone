@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -156,7 +163,7 @@ The plan is to send the external IP address of my VPS as the resolved IP address
 <span class="k">include</span> <span class="n">"/etc/bind/rndc.key"</span>;
 
 <span class="k">acl</span> <span class="s">"trusted"</span> <span class="p">{</span>
-    <span class="kn">172.x.x.x</span><span class="p">;</span>        <span class="kn">//</span> <span class="s">local</span> <span class="n">venet0</span><span class="p">:</span><span class="mi">1</span> <span class="s">internal</span> <span class="s">IP</span> <span class="s">here</span>
+    <span class="kn">172.x.x.x</span><span class="p">;</span>        <span class="kn">//</span> <span class="s">local</span> <span class="n">venet0</span><span class="p">:</span><span class="mi">17</span> <span class="s">internal</span> <span class="s">IP</span> <span class="s">here</span>
     <span class="mi">127</span><span class="s">.0.0.1</span><span class="p">;</span>
     <span class="kn">173.x.x.x</span><span class="p">;</span>        <span class="kn">//</span> <span class="s">Your</span> <span class="s">ISP</span> <span class="s">IP</span> <span class="s">here</span> <span class="s">(cable/DSL)</span>
 <span class="err">}</span><span class="p">;</span>
@@ -259,7 +266,7 @@ ns1 IN  A   199.y.y.y                ; external IP from venet0:0
 <span class="k">acl</span><span class="w"> </span>manager<span class="w"> </span><span class="k">proto</span><span class="w"> </span>cache_object<span class="w"></span>
 <span class="k">acl</span><span class="w"> </span>localhost<span class="w"> </span><span class="k">src</span><span class="w"> </span><span class="mf">127.0.0.1/32</span><span class="w"> </span><span class="mf">::1</span><span class="w"></span>
 <span class="k">acl</span><span class="w"> </span>to_localhost<span class="w"> </span><span class="k">dst</span><span class="w"> </span><span class="mf">127.0.0.0/8</span><span class="w"> </span><span class="mf">0.0.0.0/32</span><span class="w"> </span><span class="mf">::1</span><span class="w"></span>
-<span class="k">acl</span><span class="w"> </span>trusted<span class="w"> </span><span class="k">src</span><span class="w"> </span><span class="m">172</span>.x.x.x<span class="w"> </span><span class="m">173</span>.y.y.y<span class="w">        </span><span class="c"># internal IP from venet0:1 and ISP IP (Cable/DSL)</span><span class="w"></span>
+<span class="k">acl</span><span class="w"> </span>trusted<span class="w"> </span><span class="k">src</span><span class="w"> </span><span class="m">172</span>.x.x.x<span class="w"> </span><span class="m">173</span>.y.y.y<span class="w">        </span><span class="c"># internal IP from venet0:17 and ISP IP (Cable/DSL)</span><span class="w"></span>
 <span class="k">acl</span><span class="w"> </span>SSL_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">443</span><span class="w"></span>
 <span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">80</span><span class="w">      </span><span class="c"># http</span><span class="w"></span>
 <span class="k">acl</span><span class="w"> </span>Safe_ports<span class="w"> </span><span class="k">port</span><span class="w"> </span><span class="m">21</span><span class="w">      </span><span class="c"># ftp</span><span class="w"></span>
@@ -298,7 +305,7 @@ request_header_access<span class="w"> </span><span class="no">Via</span><span cl
 <h2>
 <a name="iptables" class="anchor" href="#iptables"><span class="octicon octicon-link"></span></a>Iptables</h2>
 
-<p><code>172.x.x.x</code> is the venet0:1 internal IP address. </p>
+<p><code>172.x.x.x</code> is the venet0:17 internal IP address. </p>
 
 <p>For the <code>filter</code> table (which is the default):</p>
 
