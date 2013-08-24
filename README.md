@@ -101,7 +101,7 @@ options {
 include "/etc/bind/rndc.key";
 
 acl "trusted" {
-    172.x.x.x;        // local venet0:1 internal IP here
+    172.x.x.x;        // local venet0:17 internal IP here
     127.0.0.1;
     173.x.x.x;        // Your ISP IP here (cable/DSL)
 };
@@ -199,7 +199,7 @@ When you discover a new domain that you want to "master", simply add it to the `
 acl manager proto cache_object
 acl localhost src 127.0.0.1/32 ::1
 acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1
-acl trusted src 172.x.x.x 173.y.y.y        # internal IP from venet0:1 and ISP IP (Cable/DSL)
+acl trusted src 172.x.x.x 173.y.y.y        # internal IP from venet0:17 and ISP IP (Cable/DSL)
 acl SSL_ports port 443
 acl Safe_ports port 80  	# http
 acl Safe_ports port 21		# ftp
@@ -235,7 +235,7 @@ request_header_access Via deny all
 forwarded_for off
 ```
 ##Iptables##
-`172.x.x.x` is the venet0:1 internal IP address. 
+`172.x.x.x` is the venet0:17 internal IP address. 
 
 For the `filter` table (which is the default):
 ```bash
