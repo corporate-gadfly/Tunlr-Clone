@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -32,17 +39,20 @@
         <ul></ul>
       </nav>
       <section>
-        <h1>Tunlr Clone</h1>
+        <h1>
+<a name="tunlr-clone" class="anchor" href="#tunlr-clone"><span class="octicon octicon-link"></span></a>Tunlr Clone</h1>
 
 <p>To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based services) clone on the cheap, you need to invest in a VPS.
 For the purposes of this discussion, I am assuming that you will be using this for watching <strong>non-https</strong> US geo-locked content.</p>
 
-<h2>VPS Provider Specific Terminology</h2>
+<h2>
+<a name="vps-provider-specific-terminology" class="anchor" href="#vps-provider-specific-terminology"><span class="octicon octicon-link"></span></a>VPS Provider Specific Terminology</h2>
 
-<p>My VPS provider is <a href="http://buyvm.net/">buyvm</a>. I have an OpenVZ 128m plan with them hosted in New York (running Debian 6). So, the venet0 references that
+<p>My VPS provider is <a href="http://buyvm.net/">buyvm</a>. I have an OpenVZ 128m plan with them hosted in New York (running Debian 7). So, the venet0 references that
 you will see pertain to that VPS provider.</p>
 
-<h2>Disclaimer</h2>
+<h2>
+<a name="disclaimer" class="anchor" href="#disclaimer"><span class="octicon octicon-link"></span></a>Disclaimer</h2>
 
 <p>This information is provided as is without warranty of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. In no event shall the author be liable for any damages whatsoever including direct, indirect, incidental consequential, loss of business profits, or special damages.</p>
 
@@ -50,18 +60,21 @@ you will see pertain to that VPS provider.</p>
 
 <p>Also this is not meant to be a hold-your-hand start from scratch tutorial. Therefore, some level of Linux expertise is necessary.</p>
 
-<h2>Background</h2>
+<h2>
+<a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
 <p>Basically we are interested in proxying content only for certain domains. The actual streaming media sits on CDN
 networks and is usually not geo-locked. The amount of proxying we'll end up doing will be relatively
 insignificant compared to a VPN-based setup.
 <a href="https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png"><img src="https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png" alt="How Tunlr Cloning works"></a></p>
 
-<h2>US IP Address</h2>
+<h2>
+<a name="us-ip-address" class="anchor" href="#us-ip-address"><span class="octicon octicon-link"></span></a>US IP Address</h2>
 
 <p>Your VPS provider must provide you with a US IP address</p>
 
-<h2>Tomato based router</h2>
+<h2>
+<a name="tomato-based-router" class="anchor" href="#tomato-based-router"><span class="octicon octicon-link"></span></a>Tomato based router</h2>
 
 <p>Since you will be changing DNS servers to point to your "own" DNS, it makes sense to run <code>dnsmasq</code> on your router,
 therefore having a Tomato capable router is preferable.</p>
@@ -107,7 +120,8 @@ no-poll
 <p>In essence, I am forwarding DNS queries to my VPS only for the specified domains. Everything else goes to Google DNS
 (or can easily go to your ISP DNS).</p>
 
-<h2>Your own DNS Server</h2>
+<h2>
+<a name="your-own-dns-server" class="anchor" href="#your-own-dns-server"><span class="octicon octicon-link"></span></a>Your own DNS Server</h2>
 
 <p>I am running bind9 on my VPS to override the DNS resolution for the entire domains mentioned in the Tomato-based router configuration above.
 The plan is to send the external IP address of my VPS as the resolved IP address for any of those domains.</p>
@@ -243,7 +257,8 @@ ns1 IN  A   199.y.y.y                ; external IP from venet0:0
 
 <p>When you discover a new domain that you want to "master", simply add it to the <code>zones.override</code> file and restart bind9.</p>
 
-<h2>Squid</h2>
+<h2>
+<a name="squid" class="anchor" href="#squid"><span class="octicon octicon-link"></span></a>Squid</h2>
 
 <p><code>/etc/squid3/squid.conf</code></p>
 
@@ -287,7 +302,8 @@ request_header_access<span class="w"> </span><span class="no">Via</span><span cl
 <span class="k">forwarded_for</span><span class="w"> </span><span class="no">off</span><span class="w"></span>
 </pre></div>
 
-<h2>Iptables</h2>
+<h2>
+<a name="iptables" class="anchor" href="#iptables"><span class="octicon octicon-link"></span></a>Iptables</h2>
 
 <p><code>172.x.x.x</code> is the venet0:1 internal IP address. </p>
 
@@ -303,7 +319,7 @@ request_header_access<span class="w"> </span><span class="no">Via</span><span cl
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
