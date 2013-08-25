@@ -1,27 +1,49 @@
 #Tunlr Clone#
-To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based services) clone on the cheap, you need to invest in a VPS.
-For the purposes of this discussion, I am assuming that you will be using this for watching **non-https** US geo-locked content.
+To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based
+services) clone on the cheap, you need to invest in a VPS.  For the
+purposes of this discussion, I am assuming that you will be using
+this for watching **non-https** US geo-locked content.
+
 ##VPS Provider Specific Terminology##
-My VPS provider is [buyvm](http://buyvm.net/). I have an OpenVZ 128m plan with them hosted in New York (running Debian 7). So, the venet0 references that
-you will see pertain to that VPS provider.
+My VPS provider is [buyvm](http://buyvm.net/).  I have an OpenVZ
+128m plan with them hosted in New York (running Debian 7).  So, the
+venet0 references that you will see pertain to that VPS provider.
+
 ##Disclaimer##
-This information is provided as is without warranty of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. In no event shall the author be liable for any damages whatsoever including direct, indirect, incidental consequential, loss of business profits, or special damages.
+This information is provided as is without warranty of any kind,
+either express or implied, including but not limited to the implied
+warranties of merchantability and fitness for a particular purpose.
+In no event shall the author be liable for any damages whatsoever
+including direct, indirect, incidental consequential, loss of
+business profits, or special damages.
 
-If you leave your DNS server or Squid proxy server wide open to abuse, that's on your own head. Take precautions in this regard. Proceed at your own risk.
+If you leave your DNS server or Squid proxy server wide open to
+abuse, that's on your own head.  Take precautions in this regard.
+Proceed at your own risk.
 
-Also this is not meant to be a hold-your-hand start from scratch tutorial. Therefore, some level of Linux expertise is necessary.
+Also this is not meant to be a hold-your-hand start from scratch
+tutorial.  Therefore, some level of Linux expertise is necessary.
+
 ##Background##
-Basically we are interested in proxying content only for certain domains. The actual streaming media sits on CDN
-networks and is usually not geo-locked. The amount of proxying we'll end up doing will be relatively
-insignificant compared to a VPN-based setup.
+Basically we are interested in proxying content only for certain
+domains.  The actual streaming media sits on CDN networks and is
+usually not geo-locked.  The amount of proxying we'll end up doing
+will be relatively insignificant compared to a VPN-based setup.
 [![How Tunlr Cloning works](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)
+
 ##US IP Address##
 Your VPS provider must provide you with a US IP address
-##Tomato based router##
-Since you will be changing DNS servers to point to your "own" DNS, it makes sense to run `dnsmasq` on your router, so that only relevant DNS queries make it your DNS server and the vast majority of the remaining DNS queries go to your regular ISP DNS. 
-Therefore having a Tomato capable router is preferable (as Tomato has `dnsmasq` capabilities).
 
-Following is my `dnsmasq` configuration on my Tomato-based router (running a Toastman build):
+##Tomato based router##
+Since you will be changing DNS servers to point to your "own" DNS,
+it makes sense to run `dnsmasq` on your router, so that only relevant
+DNS queries make it your DNS server and the vast majority of the
+remaining DNS queries go to your regular ISP DNS.  Therefore having
+a Tomato capable router is preferable (as Tomato has `dnsmasq`
+capabilities).
+
+Following is my `dnsmasq` configuration on my Tomato-based router
+(running a Toastman build):
 `Advanced -> DHCP/DNS -> Dnsmasq Custom configuration`
 ```bash
 # Never forward plain names (without a dot or domain part)
@@ -58,14 +80,18 @@ server=8.8.4.4
 #server=208.67.222.222
 #server=208.67.220.220
 ```
-In essence, I am forwarding DNS queries to my VPS only for the specified domains. Everything else goes to Google DNS
-(or can easily go to your ISP DNS).
+In essence, I am forwarding DNS queries to my VPS only for the
+specified domains.  Everything else goes to Google DNS (or can
+easily go to your ISP DNS).
 
 ##Your own DNS Server##
-I am running bind9 on my VPS to override the DNS resolution for the entire domains mentioned in the Tomato-based router configuration above.
-The plan is to send the external IP address of my VPS as the resolved IP address for any of those domains.
+I am running bind9 on my VPS to override the DNS resolution for the
+entire domains mentioned in the Tomato-based router configuration
+above.  The plan is to send the external IP address of my VPS as
+the resolved IP address for any of those domains.
 
-Once the web traffic hits my VPS, I use iptables to redirect port 80 traffic to squid running on port 8xxx.
+Once the web traffic hits my VPS, I use iptables to redirect port
+80 traffic to squid running on port 8xxx.
 
 Here is the bind9 config:
 
@@ -190,7 +216,8 @@ ns1 IN  A   199.y.y.y                ; external IP from venet0:0
 ; resolve everything with the same IP address as ns1
 *   IN  A   199.y.y.y                 ; external IP from venet0:0
 ```
-When you discover a new domain that you want to "master", simply add it to the `zones.override` file and restart bind9.
+When you discover a new domain that you want to "master", simply
+add it to the `zones.override` file and restart bind9.
 
 ##Squid##
 `/etc/squid3/squid.conf`
