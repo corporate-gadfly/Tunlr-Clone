@@ -232,6 +232,7 @@ add it to the `zones.override` file and restart bind9.
 ##HTTPS-SNI-Proxy##
 Install according to the instructions on
 [HTTPS-SNI-Proxy](https://github.com/dlundquist/HTTPS-SNI-Proxy)
+
 `/etc/sni_proxy.conf`
 ```sni_proxy.conf
 # grep '^[^#]' /etc/sni_proxy.conf
