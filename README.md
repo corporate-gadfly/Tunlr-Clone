@@ -2,7 +2,7 @@
 To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based
 services) clone on the cheap, you need to invest in a VPS.  For the
 purposes of this discussion, I am assuming that you will be using
-this for watching **non-https** US geo-locked content.
+this for watching US geo-locked content.
 
 ##US IP Address##
 Your VPS provider must provide you with a US IP address
@@ -20,7 +20,7 @@ In no event shall the author be liable for any damages whatsoever
 including direct, indirect, incidental consequential, loss of
 business profits, or special damages.
 
-If you leave your DNS server or Squid proxy server wide open to
+If you leave your DNS server or HTTPS-SNI-Proxy server wide open to
 abuse, that's on your own head.  Take precautions in this regard.
 Proceed at your own risk.
 
@@ -63,6 +63,7 @@ no-poll
 # tunlr for hulu
 server=/hulu.com/199.x.x.x
 server=/huluim.com/199.x.x.x
+server=/netflix.com/199.x.x.x
 # tunlr for US networks
 # cbs works with link.theplatform.com
 server=/abc.com/abc.go.com/199.x.x.x
@@ -94,7 +95,9 @@ above.  The plan is to send the external IP address of my VPS as
 the resolved IP address for any of those domains.
 
 Once the web traffic hits my VPS, I use iptables to redirect port
-80 traffic to squid running on port 8xxx.
+80/443 traffic to
+[HTTPS-SNI-Proxy](https://github.com/dlundquist/HTTPS-SNI-Proxy)
+running on port 8080/8443.
 
 Here is the bind9 config:
 
@@ -156,6 +159,10 @@ zone "hulu.com." {
     file "/etc/bind/db.override";
 };
 zone "huluim.com." {
+    type master;
+    file "/etc/bind/db.override";
+};
+zone "netflix.com." {
     type master;
     file "/etc/bind/db.override";
 };
@@ -222,56 +229,47 @@ ns1 IN  A   199.x.x.x                ; external IP from venet0:0
 When you discover a new domain that you want to "master", simply
 add it to the `zones.override` file and restart bind9.
 
-##Squid##
-`/etc/squid3/squid.conf`
-```squid
-# grep '^[^#]' /etc/squid3/squid.conf
-acl manager proto cache_object
-acl localhost src 127.0.0.1/32 ::1
-acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1
-acl trusted src 172.y.y.y 173.z.z.z        # internal IP from venet0:17 and ISP IP (Cable/DSL)
-acl SSL_ports port 443
-acl Safe_ports port 80  	# http
-acl Safe_ports port 21		# ftp
-acl Safe_ports port 443		# https
-acl Safe_ports port 70		# gopher
-acl Safe_ports port 210		# wais
-acl Safe_ports port 1025-65535	# unregistered ports
-acl Safe_ports port 280		# http-mgmt
-acl Safe_ports port 488		# gss-http
-acl Safe_ports port 591		# filemaker
-acl Safe_ports port 777		# multiling http
-acl CONNECT method CONNECT
-http_access allow manager localhost
-http_access deny manager
-http_access deny !Safe_ports
-http_access deny CONNECT !SSL_ports
-http_access allow trusted
-http_access allow localhost
-http_access deny all
-http_port 0.0.0.0:8128 transparent
-hierarchy_stoplist cgi-bin ?
-debug_options ALL,3
-coredump_dir /var/spool/squid3
-cache deny all
-refresh_pattern ^ftp:    	1440	20%	10080
-refresh_pattern ^gopher:	1440	0%	1440
-refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
-refresh_pattern .		0	20%	4320
-request_header_access Proxy-Connection deny all
-request_header_access X-Forwarded-For deny all
-request_header_access Connection deny all
-request_header_access Via deny all
-forwarded_for off
+##HTTPS-SNI-Proxy##
+Install according to the instructions on
+[HTTPS-SNI-Proxy](https://github.com/dlundquist/HTTPS-SNI-Proxy)
+`/etc/sni_proxy.conf`
+```sni_proxy.conf
+# grep '^[^#]' /etc/sni_proxy.conf
+user daemon
+listener 172.y.y.y 8080 {
+    proto http
+    table http
+}
+listener 172.y.y.y 8443 {
+    proto tls
+    table https
+}
+table "http" {
+    (hulu|huluim)\.com * 80
+    abc\.(go\.)?com * 80
+    (nbc|nbcuni)\.com * 80
+    netflix\.com * 80
+    ip2location\.com * 80
+}
+table "https" {
+    (hulu|huluim)\.com * 443
+    abc\.(go\.)?com * 443
+    (nbc|nbcuni)\.com * 443
+    netflix\.com * 443
+    ip2location\.com * 443
+}
 ```
 ##Iptables##
-`172.y.y.y` is the venet0:17 internal IP address. 
+`172.y.y.y` is the venet0:17 internal IP address. `173.x.x.x` is your ISP
+address provided by Cable or DSL.
 
 For the `filter` table (which is the default):
 ```bash
-iptables -A INPUT -i venet0 -d 172.y.y.y -p tcp -m tcp --dport 8128 -j ACCEPT
+iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 8443 -j ACCEPT
 ```
 For the `nat` table:
 ```bash
-iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y:8128
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y:8080
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y:8443
 ```
