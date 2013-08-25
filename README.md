@@ -4,6 +4,9 @@ services) clone on the cheap, you need to invest in a VPS.  For the
 purposes of this discussion, I am assuming that you will be using
 this for watching **non-https** US geo-locked content.
 
+##US IP Address##
+Your VPS provider must provide you with a US IP address
+
 ##VPS Provider Specific Terminology##
 My VPS provider is [buyvm](http://buyvm.net/).  I have an OpenVZ
 128m plan with them hosted in New York (running Debian 7).  So, the
@@ -30,9 +33,6 @@ domains.  The actual streaming media sits on CDN networks and is
 usually not geo-locked.  The amount of proxying we'll end up doing
 will be relatively insignificant compared to a VPN-based setup.
 [![How Tunlr Cloning works](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)
-
-##US IP Address##
-Your VPS provider must provide you with a US IP address
 
 ##Tomato based router##
 Since you will be changing DNS servers to point to your "own" DNS,
