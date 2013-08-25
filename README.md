@@ -18,8 +18,8 @@ insignificant compared to a VPN-based setup.
 ##US IP Address##
 Your VPS provider must provide you with a US IP address
 ##Tomato based router##
-Since you will be changing DNS servers to point to your "own" DNS, it makes sense to run `dnsmasq` on your router,
-therefore having a Tomato capable router is preferable.
+Since you will be changing DNS servers to point to your "own" DNS, it makes sense to run `dnsmasq` on your router, so that only relevant DNS queries make it your DNS server and the vast majority of the remaining DNS queries go to your regular ISP DNS. 
+Therefore having a Tomato capable router is preferable (as Tomato has `dnsmasq` capabilities).
 
 Following is my `dnsmasq` configuration on my Tomato-based router (running a Toastman build):
 `Advanced -> DHCP/DNS -> Dnsmasq Custom configuration`
