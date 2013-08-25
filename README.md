@@ -80,6 +80,9 @@ server=8.8.4.4
 #server=208.67.222.222
 #server=208.67.220.220
 ```
+`199.x.x.x` is the IP address of my VPS server (where my DNS server will
+also be running). See next section.
+
 In essence, I am forwarding DNS queries to my VPS only for the
 specified domains.  Everything else goes to Google DNS (or can
 easily go to your ISP DNS).
@@ -127,9 +130,9 @@ options {
 include "/etc/bind/rndc.key";
 
 acl "trusted" {
-    172.x.x.x;        // local venet0:17 internal IP here
+    172.y.y.y;        // local venet0:17 internal IP here
     127.0.0.1;
-    173.x.x.x;        // Your ISP IP here (cable/DSL)
+    173.z.z.z;        // Your ISP IP here (cable/DSL)
 };
 
 include "/etc/bind/zones.override";
@@ -210,11 +213,11 @@ $TTL  86400
 ; need atleast a nameserver
     IN  NS  ns1
 ; specify nameserver IP address
-ns1 IN  A   199.y.y.y                ; external IP from venet0:0
+ns1 IN  A   199.x.x.x                ; external IP from venet0:0
 ; provide IP address for domain itself
-@   IN  A   199.y.y.y                ; external IP from venet0:0
+@   IN  A   199.x.x.x                ; external IP from venet0:0
 ; resolve everything with the same IP address as ns1
-*   IN  A   199.y.y.y                 ; external IP from venet0:0
+*   IN  A   199.x.x.x                 ; external IP from venet0:0
 ```
 When you discover a new domain that you want to "master", simply
 add it to the `zones.override` file and restart bind9.
@@ -226,7 +229,7 @@ add it to the `zones.override` file and restart bind9.
 acl manager proto cache_object
 acl localhost src 127.0.0.1/32 ::1
 acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1
-acl trusted src 172.x.x.x 173.y.y.y        # internal IP from venet0:17 and ISP IP (Cable/DSL)
+acl trusted src 172.y.y.y 173.z.z.z        # internal IP from venet0:17 and ISP IP (Cable/DSL)
 acl SSL_ports port 443
 acl Safe_ports port 80  	# http
 acl Safe_ports port 21		# ftp
@@ -262,13 +265,13 @@ request_header_access Via deny all
 forwarded_for off
 ```
 ##Iptables##
-`172.x.x.x` is the venet0:17 internal IP address. 
+`172.y.y.y` is the venet0:17 internal IP address. 
 
 For the `filter` table (which is the default):
 ```bash
-iptables -A INPUT -i venet0 -d 172.x.x.x -p tcp -m tcp --dport 8128 -j ACCEPT
+iptables -A INPUT -i venet0 -d 172.y.y.y -p tcp -m tcp --dport 8128 -j ACCEPT
 ```
 For the `nat` table:
 ```bash
-iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.x.x.x:8128
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y:8128
 ```
