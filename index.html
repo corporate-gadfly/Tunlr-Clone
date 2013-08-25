@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -69,8 +76,8 @@ insignificant compared to a VPN-based setup.
 <h2>
 <a name="tomato-based-router" class="anchor" href="#tomato-based-router"><span class="octicon octicon-link"></span></a>Tomato based router</h2>
 
-<p>Since you will be changing DNS servers to point to your "own" DNS, it makes sense to run <code>dnsmasq</code> on your router,
-therefore having a Tomato capable router is preferable.</p>
+<p>Since you will be changing DNS servers to point to your "own" DNS, it makes sense to run <code>dnsmasq</code> on your router, so that only relevant DNS queries make it your DNS server and the vast majority of the remaining DNS queries go to your regular ISP DNS. 
+Therefore having a Tomato capable router is preferable (as Tomato has <code>dnsmasq</code> capabilities).</p>
 
 <p>Following is my <code>dnsmasq</code> configuration on my Tomato-based router (running a Toastman build):
 <code>Advanced -&gt; DHCP/DNS -&gt; Dnsmasq Custom configuration</code></p>
