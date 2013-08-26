@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -75,10 +82,26 @@ tutorial.  Therefore, some level of Linux expertise is necessary.</p>
 <p>Basically we are interested in proxying content only for certain
 domains.  The actual streaming media sits on CDN networks and is
 usually not geo-locked.  The amount of proxying we'll end up doing
-will be relatively insignificant compared to a VPN-based setup.
-<a href="https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png"><img src="https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png" alt="How Tunlr Cloning works"></a></p>
+will be relatively insignificant compared to a VPN-based setup.</p>
 
-<h2>
+<p><a href="https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png"><img src="https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png" alt="How Tunlr Cloning works"></a></p>
+
+<p>User browses to Hulu homepage. Behind the scenes, this triggers the
+following sequence of events:</p>
+
+<ol>
+<li>Browsing device asks for the IP address of <a href="http://www.hulu.com">www.hulu.com</a> (using DNS).</li>
+<li>Since the router is running <code>dnsmasq</code>, it selectively sends the DNS
+query for <a href="http://www.hulu.com">www.hulu.com</a> to DNS server running on the VPS.</li>
+<li>The VPS DNS server responds with the IP address of VPS SNI Server as the
+authorative answer for the DNS query.</li>
+<li>Router sends resolved IP address back to browsing device.</li>
+<li>Browsing device sends a request for content for <a href="http://www.hulu.com">www.hulu.com</a>.</li>
+<li>VPS SNI Server sends a request for content to <a href="http://www.hulu.com">www.hulu.com</a>.</li>
+<li>Since the VPS SNI Server has an IP presence in USA, <a href="http://www.hulu.com">www.hulu.com</a>
+responds with proper content.</li>
+<li>VPS SNI Server proxies the content back to the browsing device</li>
+</ol><h2>
 <a name="tomato-based-router" class="anchor" href="#tomato-based-router"><span class="octicon octicon-link"></span></a>Tomato based router</h2>
 
 <p>Since you will be changing DNS servers to point to your "own" DNS,
