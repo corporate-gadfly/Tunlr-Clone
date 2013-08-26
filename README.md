@@ -35,7 +35,7 @@ will be relatively insignificant compared to a VPN-based setup.
 
 [![How Tunlr Cloning works](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)
 
-Users browses to Hulu homepage. Behind the scenes, this triggers the
+User browses to Hulu homepage. Behind the scenes, this triggers the
 following sequence of events:
 
 1. Browsing device asks for the IP address of www.hulu.com (using DNS).
