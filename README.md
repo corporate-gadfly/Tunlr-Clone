@@ -110,10 +110,11 @@ entire domains mentioned in the Tomato-based router configuration
 above.  The plan is to send the external IP address of my VPS as
 the resolved IP address for any of those domains.
 
-Once the web traffic hits my VPS, I use iptables to redirect port
-80/443 traffic to
+Once the web traffic hits my VPS, I use iptables to limit access to
+traffic provided by
 [HTTPS-SNI-Proxy](https://github.com/dlundquist/HTTPS-SNI-Proxy)
-running on port 8080/8443.
+running on port 80/443 (since currently HTTPS-SNI-Proxy does not have ACL
+capability).
 
 Here is the bind9 config:
 
@@ -253,27 +254,20 @@ Install according to the instructions on
 ```sni_proxy.conf
 # grep '^[^#]' /etc/sni_proxy.conf
 user daemon
-listener 172.y.y.y 8080 {
+listener 172.y.y.y 80 {
     proto http
-    table http
+    table sites
 }
-listener 172.y.y.y 8443 {
+listener 172.y.y.y 443 {
     proto tls
-    table https
+    table sites
 }
-table "http" {
+table sites {
     (hulu|huluim)\.com * 80
     abc\.(go\.)?com * 80
     (nbc|nbcuni)\.com * 80
     netflix\.com * 80
     ip2location\.com * 80
-}
-table "https" {
-    (hulu|huluim)\.com * 443
-    abc\.(go\.)?com * 443
-    (nbc|nbcuni)\.com * 443
-    netflix\.com * 443
-    ip2location\.com * 443
 }
 ```
 ##Iptables##
@@ -282,11 +276,11 @@ address provided by Cable or DSL.
 
 For the `filter` table (which is the default):
 ```bash
-iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 8080 -j ACCEPT
-iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 8443 -j ACCEPT
+iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 80 -j ACCEPT
+iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 443 -j ACCEPT
 ```
 For the `nat` table:
 ```bash
-iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y:8080
-iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y:8443
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y
 ```
