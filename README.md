@@ -250,9 +250,9 @@ add it to the `zones.override` file and restart bind9.
 Install according to the instructions on
 [HTTPS-SNI-Proxy](https://github.com/dlundquist/HTTPS-SNI-Proxy)
 
-`/etc/sni_proxy.conf`
-```sni_proxy.conf
-# grep '^[^#]' /etc/sni_proxy.conf
+`/etc/sniproxy.conf`
+```sniproxy.conf
+# grep '^[^#]' /etc/sniproxy.conf
 user daemon
 listener 172.y.y.y 80 {
     proto http
@@ -263,11 +263,11 @@ listener 172.y.y.y 443 {
     table sites
 }
 table sites {
-    (hulu|huluim)\.com * 80
-    abc\.(go\.)?com * 80
-    (nbc|nbcuni)\.com * 80
-    netflix\.com * 80
-    ip2location\.com * 80
+    (hulu|huluim)\.com *
+    abc\.(go\.)?com *
+    (nbc|nbcuni)\.com *
+    netflix\.com *
+    ip2location\.com *
 }
 ```
 ##Iptables##
