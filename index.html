@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -108,7 +115,7 @@ capabilities).</p>
 (running a Toastman build):
 <code>Advanced -&gt; DHCP/DNS -&gt; Dnsmasq Custom configuration</code></p>
 
-<div class="highlight"><pre><span class="c"># Never forward plain names (without a dot or domain part)</span>
+<div class="highlight highlight-bash"><pre><span class="c"># Never forward plain names (without a dot or domain part)</span>
 domain-needed
 <span class="c"># Never forward addresses in the non-routed address spaces.</span>
 bogus-priv
@@ -159,16 +166,17 @@ entire domains mentioned in the Tomato-based router configuration
 above.  The plan is to send the external IP address of my VPS as
 the resolved IP address for any of those domains.</p>
 
-<p>Once the web traffic hits my VPS, I use iptables to redirect port
-80/443 traffic to
+<p>Once the web traffic hits my VPS, I use iptables to limit access to
+traffic provided by
 <a href="https://github.com/dlundquist/HTTPS-SNI-Proxy">HTTPS-SNI-Proxy</a>
-running on port 8080/8443.</p>
+running on port 80/443 (since currently HTTPS-SNI-Proxy does not have ACL
+capability).</p>
 
 <p>Here is the bind9 config:</p>
 
 <p><code>/etc/bind/named.conf.options</code></p>
 
-<div class="highlight"><pre><span class="k">options</span> <span class="p">{</span>
+<div class="highlight highlight-nginx"><pre><span class="k">options</span> <span class="p">{</span>
     <span class="kn">directory</span> <span class="s">"/var/cache/bind"</span><span class="p">;</span>
     <span class="kn">forwarders</span> <span class="p">{</span>
         <span class="c1"># these are the DNS servers from the VPS provider (look in /etc/resolv.conf if yours are different)</span>
@@ -188,7 +196,7 @@ running on port 8080/8443.</p>
 
 <p><code>/etc/bind/named.conf.local</code></p>
 
-<div class="highlight"><pre><span class="k">//</span>
+<div class="highlight highlight-nginx"><pre><span class="k">//</span>
 <span class="s">//</span> <span class="s">Do</span> <span class="s">any</span> <span class="s">local</span> <span class="s">configuration</span> <span class="s">here</span>
 <span class="s">//</span>
 
@@ -221,7 +229,7 @@ running on port 8080/8443.</p>
 
 <p><code>/etc/bind/zones.override</code></p>
 
-<div class="highlight"><pre><span class="k">zone</span> <span class="s">"hulu.com."</span> <span class="p">{</span>
+<div class="highlight highlight-nginx"><pre><span class="k">zone</span> <span class="s">"hulu.com."</span> <span class="p">{</span>
     <span class="kn">type</span> <span class="s">master</span><span class="p">;</span>
     <span class="kn">file</span> <span class="s">"/etc/bind/db.override"</span><span class="p">;</span>
 <span class="p">}</span>;
@@ -308,27 +316,20 @@ add it to the <code>zones.override</code> file and restart bind9.</p>
 
 <pre lang="sni_proxy.conf"><code># grep '^[^#]' /etc/sni_proxy.conf
 user daemon
-listener 172.y.y.y 8080 {
+listener 172.y.y.y 80 {
     proto http
-    table http
+    table sites
 }
-listener 172.y.y.y 8443 {
+listener 172.y.y.y 443 {
     proto tls
-    table https
+    table sites
 }
-table "http" {
+table sites {
     (hulu|huluim)\.com * 80
     abc\.(go\.)?com * 80
     (nbc|nbcuni)\.com * 80
     netflix\.com * 80
     ip2location\.com * 80
-}
-table "https" {
-    (hulu|huluim)\.com * 443
-    abc\.(go\.)?com * 443
-    (nbc|nbcuni)\.com * 443
-    netflix\.com * 443
-    ip2location\.com * 443
 }
 </code></pre>
 
@@ -340,14 +341,14 @@ address provided by Cable or DSL.</p>
 
 <p>For the <code>filter</code> table (which is the default):</p>
 
-<div class="highlight"><pre>iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 8080 -j ACCEPT
-iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 8443 -j ACCEPT
+<div class="highlight highlight-bash"><pre>iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 80 -j ACCEPT
+iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 443 -j ACCEPT
 </pre></div>
 
 <p>For the <code>nat</code> table:</p>
 
-<div class="highlight"><pre>iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y:8080
-iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y:8443
+<div class="highlight highlight-bash"><pre>iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y
+iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y
 </pre></div>
       </section>
       <footer>
