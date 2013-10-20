@@ -254,15 +254,14 @@ Install according to the instructions on
 ```sniproxy.conf
 # grep '^[^#]' /etc/sniproxy.conf
 user daemon
+pidfile /var/tmp/sniproxy.pid
 listener 172.y.y.y 80 {
     proto http
-    table sites
 }
 listener 172.y.y.y 443 {
     proto tls
-    table sites
 }
-table sites {
+table {
     (hulu|huluim)\.com *
     abc\.(go\.)?com *
     (nbc|nbcuni)\.com *
