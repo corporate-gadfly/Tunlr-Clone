@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -309,15 +316,14 @@ add it to the <code>zones.override</code> file and restart bind9.</p>
 
 <pre lang="sniproxy.conf"><code># grep '^[^#]' /etc/sniproxy.conf
 user daemon
+pidfile /var/tmp/sniproxy.pid
 listener 172.y.y.y 80 {
     proto http
-    table sites
 }
 listener 172.y.y.y 443 {
     proto tls
-    table sites
 }
-table sites {
+table {
     (hulu|huluim)\.com *
     abc\.(go\.)?com *
     (nbc|nbcuni)\.com *
