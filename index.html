@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -342,6 +349,22 @@ iptables -A INPUT -i venet0 -s 173.x.x.x -d 172.y.y.y -p tcp -m tcp --dport 443 
 <div class="highlight highlight-bash"><pre>iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y
 iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y
 </pre></div>
+
+<h2>
+<a name="limitations" class="anchor" href="#limitations"><span class="octicon octicon-link"></span></a>Limitations</h2>
+
+<p>At the time of writing, this procedure does not work in at least the following situations:</p>
+
+<ol>
+<li>Any devices which do not support the use of SNI (Server Name Indication) during SSL 3.0 handshake, e.g.:
+
+<ol>
+<li>Netflix on Chromecast</li>
+<li>Netflix app on Nexus 7 2013</li>
+<li>Netflix on some LG TVs</li>
+</ol>
+</li>
+</ol>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
