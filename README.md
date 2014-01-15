@@ -9,7 +9,7 @@ Your VPS provider must provide you with a US IP address
 
 ##VPS Provider Specific Terminology##
 My VPS provider is [buyvm](http://buyvm.net/).  I have an OpenVZ
-128m plan with them hosted in New York (running Debian 7).  So, the
+128m plan with them hosted in New Jersey (running Debian 7).  So, the
 venet0 references that you will see pertain to that VPS provider.
 
 ##Disclaimer##
