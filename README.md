@@ -29,9 +29,11 @@ tutorial.  Therefore, some level of Linux expertise is necessary.
 
 ##Background##
 Basically we are interested in proxying content only for certain
-domains.  The actual streaming media sits on CDN networks and is
+geo-locked domains.  The actual streaming media sits on CDNs and is
 usually not geo-locked.  The amount of proxying we'll end up doing
-will be relatively insignificant compared to a VPN-based setup.
+will be relatively insignificant compared to a VPN-based setup (where
+everything must be proxied). The outlined solution will typically
+result in significant bandwidth savings.
 
 [![How Tunlr Cloning works](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)](https://raw.github.com/corporate-gadfly/Tunlr-Clone/master/tunlr-clone.png)
 
