@@ -237,7 +237,7 @@ $TTL  86400
             )
 
 ; need atleast a nameserver
-    IN  NS  ns1
+@   IN  NS  ns1
 ; specify nameserver IP address
 ns1 IN  A   199.x.x.x                ; external IP from venet0:0
 ; provide IP address for domain itself
