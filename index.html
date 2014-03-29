@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -289,7 +296,7 @@ $TTL  86400
             )
 
 ; need atleast a nameserver
-    IN  NS  ns1
+@   IN  NS  ns1
 ; specify nameserver IP address
 ns1 IN  A   199.x.x.x                ; external IP from venet0:0
 ; provide IP address for domain itself
