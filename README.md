@@ -42,11 +42,13 @@ User browses to Hulu homepage. Behind the scenes, this triggers the
 following sequence of events:
 
 1. Browsing device asks for the IP address of www.hulu.com (using DNS).
-1. Since the router is running `dnsmasq`, it selectively sends the DNS
+1. If the router is not running `dnsmasq`, it sends the DNS
    query for www.hulu.com to DNS server running on the VPS.
 1. The VPS DNS server responds with the IP address of VPS SNI Server as the
    authorative answer for the DNS query.
-1. Router sends resolved IP address back to browsing device.
+1. If the router is running `dnsmasq`, it directly sends the resolved
+   IP address back to browsing device. Otherwise, it has to wait for DNS
+   resolution from steps 2 and 3 (above).
 1. Browsing device sends a request for content for www.hulu.com.
 1. VPS SNI Server sends a request for content to www.hulu.com.
 1. Since the VPS SNI Server has an IP presence in USA, www.hulu.com
