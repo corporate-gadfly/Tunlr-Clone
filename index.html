@@ -25,6 +25,13 @@
         <span id="logo"></span>
 
         <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
       </div><!-- end banner -->
 
     <div class="wrapper">
@@ -43,7 +50,8 @@ this for watching US geo-locked content.</p>
 <h2>
 <a name="us-ip-address" class="anchor" href="#us-ip-address"><span class="octicon octicon-link"></span></a>US IP Address</h2>
 
-<p>Your VPS provider must provide you with a US IP address</p>
+<p>Your VPS provider must provide you with an exteral IP address with
+presence in the US.</p>
 
 <h2>
 <a name="vps-provider-specific-terminology" class="anchor" href="#vps-provider-specific-terminology"><span class="octicon octicon-link"></span></a>VPS Provider Specific Terminology</h2>
@@ -86,25 +94,28 @@ following sequence of events:</p>
 
 <ol>
 <li>Browsing device asks for the IP address of <a href="http://www.hulu.com">www.hulu.com</a> (using DNS).</li>
-<li>Since the router is running <code>dnsmasq</code>, it selectively sends the DNS
+<li>If the router is not running <code>dnsmasq</code>, it sends the DNS
 query for <a href="http://www.hulu.com">www.hulu.com</a> to DNS server running on the VPS.</li>
 <li>The VPS DNS server responds with the IP address of VPS SNI Server as the
 authorative answer for the DNS query.</li>
-<li>Router sends resolved IP address back to browsing device.</li>
+<li>If the router is running <code>dnsmasq</code>, it directly sends the resolved
+IP address back to browsing device. Otherwise, it has to wait for DNS
+resolution from steps 2 and 3 (above).</li>
 <li>Browsing device sends a request for content for <a href="http://www.hulu.com">www.hulu.com</a>.</li>
 <li>VPS SNI Server sends a request for content to <a href="http://www.hulu.com">www.hulu.com</a>.</li>
 <li>Since the VPS SNI Server has an IP presence in USA, <a href="http://www.hulu.com">www.hulu.com</a>
 responds with proper content.</li>
 <li>VPS SNI Server proxies the content back to the browsing device</li>
-</ol><h2>
-<a name="tomato-based-router" class="anchor" href="#tomato-based-router"><span class="octicon octicon-link"></span></a>Tomato based router</h2>
+</ol><p>It is pertinent to point out that if your router is dnsmasq-capable,
+then, you could bypass steps 2 and 3 (go directly from step 1 straight
+to 4) by having <code>dnsmasq</code> resolve the address of relevant domains.</p>
 
-<p>Since you will be changing DNS servers to point to your "own" DNS,
-it makes sense to run <code>dnsmasq</code> on your router, so that only relevant
-DNS queries make it your DNS server and the vast majority of the
-remaining DNS queries go to your regular ISP DNS.  Therefore having
-a Tomato capable router is preferable (as Tomato has <code>dnsmasq</code>
-capabilities).</p>
+<h2>
+<a name="routers-capable-of-dnsmasq-eg-those-running-tomato" class="anchor" href="#routers-capable-of-dnsmasq-eg-those-running-tomato"><span class="octicon octicon-link"></span></a>Routers capable of dnsmasq (e.g., those running Tomato)</h2>
+
+<p>If the stock firmware of your router supports <code>dnsmasq</code> or if your
+router is capable of running Tomato, then, you can use <code>dnsmasq</code> for
+your DNS-resolution needs.</p>
 
 <p>Following is my <code>dnsmasq</code> configuration on my Tomato-based router
 (running a Toastman build):
@@ -125,18 +136,18 @@ no-resolv
 no-poll
 
 <span class="c"># tunlr for hulu</span>
-<span class="nv">server</span><span class="o">=</span>/hulu.com/199.x.x.x
-<span class="nv">server</span><span class="o">=</span>/huluim.com/199.x.x.x
-<span class="nv">server</span><span class="o">=</span>/netflix.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/hulu.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/huluim.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/netflix.com/199.x.x.x
 <span class="c"># tunlr for US networks</span>
 <span class="c"># cbs works with link.theplatform.com</span>
-<span class="nv">server</span><span class="o">=</span>/abc.com/abc.go.com/199.x.x.x
-<span class="nv">server</span><span class="o">=</span>/fox.com/link.theplatform.com/199.x.x.x
-<span class="nv">server</span><span class="o">=</span>/nbc.com/nbcuni.com/199.x.x.x
-<span class="nv">server</span><span class="o">=</span>/pandora.com/199.x.x.x
-<span class="nv">server</span><span class="o">=</span>/ip2location.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/abc.com/abc.go.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/fox.com/link.theplatform.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/nbc.com/nbcuni.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/pandora.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/ip2location.com/199.x.x.x
 <span class="c"># espn3 </span>
-<span class="nv">server</span><span class="o">=</span>/broadband.espn.go.com/199.x.x.x
+<span class="nv">address</span><span class="o">=</span>/broadband.espn.go.com/199.x.x.x
 
 <span class="c"># Google</span>
 <span class="nv">server</span><span class="o">=</span>8.8.8.8
@@ -146,20 +157,28 @@ no-poll
 <span class="c">#server=208.67.220.220</span>
 </pre></div>
 
-<p><code>199.x.x.x</code> is the IP address of my VPS server (where my DNS server will
-also be running). See next section.</p>
+<p><code>199.x.x.x</code> is the IP address of my VPS server (where my SNI proxy server will
+also be running). See next section(s).</p>
 
-<p>In essence, I am forwarding DNS queries to my VPS only for the
+<p>In essence, I am resolving DNS queries to point to my VPS only for the
 specified domains.  Everything else goes to Google DNS (or can
-easily go to your ISP DNS).</p>
+easily go to your ISP DNS). This means that CDN-hosted media DNS
+resolution will not be going to our Linux VPS.</p>
 
 <h2>
-<a name="your-own-dns-server" class="anchor" href="#your-own-dns-server"><span class="octicon octicon-link"></span></a>Your own DNS Server</h2>
+<a name="routers-incapable-of-running-dnsmasq" class="anchor" href="#routers-incapable-of-running-dnsmasq"><span class="octicon octicon-link"></span></a>Routers incapable of running dnsmasq</h2>
 
-<p>I am running bind9 on my VPS to override the DNS resolution for the
-entire domains mentioned in the Tomato-based router configuration
-above.  The plan is to send the external IP address of my VPS as
-the resolved IP address for any of those domains.</p>
+<p>If you have a router which does not support running <code>dnsmasq</code> (either
+via the stock firmware or is not Tomato-capable), then, you will have to
+point all of your DNS queries to a DNS server running in your
+control on your VPS.</p>
+
+<h2>
+<a name="your-own-dns-server-running-on-vps" class="anchor" href="#your-own-dns-server-running-on-vps"><span class="octicon octicon-link"></span></a>Your own DNS Server running on VPS</h2>
+
+<p>In the situation where my router is incapable of running <code>dnsmasq</code> I
+will have to run a DNS server (e.g., bind9) on my VPS. The plan is to send the external IP address of my VPS as the resolved IP address for any of the relevant domains.
+Everything else will be forwarded to another DNS for resolution.</p>
 
 <p>Once the web traffic hits my VPS, I use iptables to limit access to
 traffic provided by
