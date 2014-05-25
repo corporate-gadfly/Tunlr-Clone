@@ -1,27 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
     <title>Tunlr Clone by corporate-gadfly</title>
-  </head>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+  </head>
   <body>
 
-    <header>
-      <div class="container">
+      <header>
         <h1>Tunlr Clone</h1>
-        <h2>Use a cheap VPS to make a Tunlr Clone</h2>
-      </div>
-    </header>
+        <p>Use a cheap VPS to make a Tunlr Clone</p>
+      </header>
 
-    <div class="container">
-      <section id="main_content">
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
         <h1>
 <a name="tunlr-clone" class="anchor" href="#tunlr-clone"><span class="octicon octicon-link"></span></a>Tunlr Clone</h1>
 
@@ -361,8 +378,12 @@ iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.
 </li>
 </ol>
       </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
