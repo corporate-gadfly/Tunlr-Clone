@@ -5,7 +5,8 @@ purposes of this discussion, I am assuming that you will be using
 this for watching US geo-locked content.
 
 ##US IP Address##
-Your VPS provider must provide you with a US IP address
+Your VPS provider must provide you with an exteral IP address with
+presence in the US.
 
 ##VPS Provider Specific Terminology##
 My VPS provider is [buyvm](http://buyvm.net/).  I have an OpenVZ
@@ -52,13 +53,14 @@ following sequence of events:
    responds with proper content.
 1. VPS SNI Server proxies the content back to the browsing device
 
-##Tomato based router##
-Since you will be changing DNS servers to point to your "own" DNS,
-it makes sense to run `dnsmasq` on your router, so that only relevant
-DNS queries make it your DNS server and the vast majority of the
-remaining DNS queries go to your regular ISP DNS.  Therefore having
-a Tomato capable router is preferable (as Tomato has `dnsmasq`
-capabilities).
+It is pertinent to point out that if your router is dnsmasq-capable,
+then, you could bypass steps 2 and 3 (go directly from step 1 straight
+to 4) by having `dnsmasq` resolve the address of relevant domains.
+
+##Routers capable of dnsmasq (e.g., those running Tomato)##
+If the stock firmware of your router supports `dnsmasq` or if your
+router is capable of running Tomato, then, you can use `dnsmasq` for
+your DNS-resolution needs.
 
 Following is my `dnsmasq` configuration on my Tomato-based router
 (running a Toastman build):
@@ -79,18 +81,18 @@ no-resolv
 no-poll
 
 # tunlr for hulu
-server=/hulu.com/199.x.x.x
-server=/huluim.com/199.x.x.x
-server=/netflix.com/199.x.x.x
+address=/hulu.com/199.x.x.x
+address=/huluim.com/199.x.x.x
+address=/netflix.com/199.x.x.x
 # tunlr for US networks
 # cbs works with link.theplatform.com
-server=/abc.com/abc.go.com/199.x.x.x
-server=/fox.com/link.theplatform.com/199.x.x.x
-server=/nbc.com/nbcuni.com/199.x.x.x
-server=/pandora.com/199.x.x.x
-server=/ip2location.com/199.x.x.x
+address=/abc.com/abc.go.com/199.x.x.x
+address=/fox.com/link.theplatform.com/199.x.x.x
+address=/nbc.com/nbcuni.com/199.x.x.x
+address=/pandora.com/199.x.x.x
+address=/ip2location.com/199.x.x.x
 # espn3 
-server=/broadband.espn.go.com/199.x.x.x
+address=/broadband.espn.go.com/199.x.x.x
 
 # Google
 server=8.8.8.8
@@ -99,18 +101,24 @@ server=8.8.4.4
 #server=208.67.222.222
 #server=208.67.220.220
 ```
-`199.x.x.x` is the IP address of my VPS server (where my DNS server will
-also be running). See next section.
+`199.x.x.x` is the IP address of my VPS server (where my SNI proxy server will
+also be running). See next section(s).
 
-In essence, I am forwarding DNS queries to my VPS only for the
+In essence, I am resolving DNS queries to point to my VPS only for the
 specified domains.  Everything else goes to Google DNS (or can
-easily go to your ISP DNS).
+easily go to your ISP DNS). This means that CDN-hosted media DNS
+resolution will not be going to our Linux VPS.
 
-##Your own DNS Server##
-I am running bind9 on my VPS to override the DNS resolution for the
-entire domains mentioned in the Tomato-based router configuration
-above.  The plan is to send the external IP address of my VPS as
-the resolved IP address for any of those domains.
+##Routers incapable of running dnsmasq##
+If you have a router which does not support running `dnsmasq` (either
+via the stock firmware or is not Tomato-capable), then, you will have to
+point all of your DNS queries to a DNS server running in your
+control on your VPS.
+
+##Your own DNS Server running on VPS##
+In the situation where my router is incapable of running `dnsmasq` I
+will have to run a DNS server (e.g., bind9) on my VPS. The plan is to send the external IP address of my VPS as the resolved IP address for any of the relevant domains.
+Everything else will be forwarded to another DNS for resolution.
 
 Once the web traffic hits my VPS, I use iptables to limit access to
 traffic provided by
