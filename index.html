@@ -1,37 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Tunlr Clone by corporate-gadfly</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Tunlr Clone by corporate-gadfly</title>
   </head>
+
   <body>
 
-      <header>
+    <header>
+      <div class="container">
         <h1>Tunlr Clone</h1>
-        <p>Use a cheap VPS to make a Tunlr Clone</p>
-      </header>
+        <h2>Use a cheap VPS to make a Tunlr Clone</h2>
 
-      <div id="banner">
-        <span id="logo"></span>
+        <section id="downloads">
+          <a href="https://github.com/corporate-gadfly/Tunlr-Clone/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/corporate-gadfly/Tunlr-Clone/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
 
-        <a href="https://github.com/corporate-gadfly/Tunlr-Clone" class="button fork"><strong>View On GitHub</strong></a>
-      </div><!-- end banner -->
-
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
-      <section>
+    <div class="container">
+      <section id="main_content">
         <h1>
 <a name="tunlr-clone" class="anchor" href="#tunlr-clone"><span class="octicon octicon-link"></span></a>Tunlr Clone</h1>
 
@@ -366,17 +362,13 @@ iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.
 <li>Any devices which do not support the use of SNI (Server Name Indication) during SSL 3.0 handshake, e.g.:
 
 <ol>
-<li>Netflix on Chromecast, PlayStation, XBox, Nexus 7 FHD, some LG smart TVs, etc.</li>
+<li>Netflix on Chromecast, PlayStation, XBox, Nexus 7 FHD, some LG smart TVs (works fine on LG 55LA6205), etc.</li>
 </ol>
 </li>
 </ol>
       </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/corporate-gadfly">corporate-gadfly</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
-      </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
     
   </body>
 </html>
