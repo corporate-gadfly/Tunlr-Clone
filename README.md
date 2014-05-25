@@ -300,4 +300,4 @@ iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.
 At the time of writing, this procedure does not work in at least the following situations:
 
 1. Any devices which do not support the use of SNI (Server Name Indication) during SSL 3.0 handshake, e.g.:
-    1. Netflix on Chromecast, PlayStation, XBox, Nexus 7 FHD, some LG smart TVs, etc.
+    1. Netflix on Chromecast, PlayStation, XBox, Nexus 7 FHD, some LG smart TVs (works fine on LG 55LA6205), etc.
