@@ -1,19 +1,19 @@
-#Tunlr Clone#
+# Tunlr Clone #
 To build a tunlr or UnoTelly or unblock-us.com (or other DNS-based
 services) clone on the cheap, you need to invest in a VPS.  For the
 purposes of this discussion, I am assuming that you will be using
 this for watching US geo-locked content.
 
-##US IP Address##
+## US IP Address ##
 Your VPS provider must provide you with an exteral IP address with
 presence in the US.
 
-##VPS Provider Specific Terminology##
+## VPS Provider Specific Terminology ##
 My VPS provider is [buyvm](http://buyvm.net/).  I have an OpenVZ
 128m plan with them hosted in New Jersey (running Debian 7).  So, the
 venet0 references that you will see pertain to that VPS provider.
 
-##Disclaimer##
+## Disclaimer ##
 This information is provided as is without warranty of any kind,
 either express or implied, including but not limited to the implied
 warranties of merchantability and fitness for a particular purpose.
@@ -28,7 +28,7 @@ Proceed at your own risk.
 Also this is not meant to be a hold-your-hand start from scratch
 tutorial.  Therefore, some level of Linux expertise is necessary.
 
-##Background##
+## Background ##
 Basically we are interested in proxying content only for certain
 geo-locked domains.  The actual streaming media sits on CDNs and is
 usually not geo-locked.  The amount of proxying we'll end up doing
@@ -59,7 +59,7 @@ It is pertinent to point out that if your router is dnsmasq-capable,
 then, you could bypass steps 2 and 3 (go directly from step 1 straight
 to 4) by having `dnsmasq` resolve the address of relevant domains.
 
-##Routers capable of dnsmasq (e.g., those running Tomato)##
+## Routers capable of dnsmasq (e.g., those running Tomato) ##
 If the stock firmware of your router supports `dnsmasq` or if your
 router is capable of running Tomato, then, you can use `dnsmasq` for
 your DNS-resolution needs.
@@ -111,13 +111,13 @@ specified domains.  Everything else goes to Google DNS (or can
 easily go to your ISP DNS). This means that CDN-hosted media DNS
 resolution will not be going to our Linux VPS.
 
-##Routers incapable of running dnsmasq##
+## Routers incapable of running dnsmasq ##
 If you have a router which does not support running `dnsmasq` (either
 via the stock firmware or is not Tomato-capable), then, you will have to
 point all of your DNS queries to a DNS server running in your
 control on your VPS.
 
-##Your own DNS Server running on VPS##
+## Your own DNS Server running on VPS ##
 In the situation where my router is incapable of running `dnsmasq` I
 will have to run a DNS server (e.g., bind9) on my VPS. The plan is to send the external IP address of my VPS as the resolved IP address for any of the relevant domains.
 Everything else will be forwarded to another DNS for resolution.
@@ -258,7 +258,7 @@ ns1 IN  A   199.x.x.x                ; external IP from venet0:0
 When you discover a new domain that you want to "master", simply
 add it to the `zones.override` file and restart bind9.
 
-##HTTPS-SNI-Proxy##
+## HTTPS-SNI-Proxy ##
 Install according to the instructions on
 [HTTPS-SNI-Proxy](https://github.com/dlundquist/HTTPS-SNI-Proxy)
 
@@ -281,7 +281,7 @@ table {
     ip2location\.com *
 }
 ```
-##Iptables##
+## Iptables ##
 `172.y.y.y` is the venet0:17 internal IP address. `173.x.x.x` is your ISP
 address provided by Cable or DSL.
 
@@ -296,7 +296,7 @@ iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 80 -j DNAT --to 172.y.y.y
 iptables -t nat -A PREROUTING -i venet0 -p tcp --dport 443 -j DNAT --to 172.y.y.y
 ```
 
-##Limitations##
+## Limitations ##
 At the time of writing, this procedure does not work in at least the following situations:
 
 1. Any devices which do not support the use of SNI (Server Name Indication) during SSL 3.0 handshake, e.g.:
